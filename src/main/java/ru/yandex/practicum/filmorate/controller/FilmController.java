@@ -33,6 +33,15 @@ public class FilmController {
         } else if (!isValidDate(film)) {
             log.warn("Неверная дата релиза");
             throw new ValidationException(HttpStatus.BAD_REQUEST, "Ошибка, дата релиза — не раньше 28 декабря 1895 года.");
+        } else if (film.getDescription().length() > 200) {
+            log.warn("Описание не более 200 символов");
+            throw new ValidationException(HttpStatus.BAD_REQUEST, "Описание не более 200 символов");
+        } else if (!(film.getDuration() > 0)) {
+            log.warn("некорректная продолжительность фильма");
+            throw new ValidationException(HttpStatus.BAD_REQUEST, "некорректная продолжительность фильма");
+        } else if(film.getName() == null || film.getName().isBlank()){
+            log.warn("фильм без названия");
+            throw new ValidationException(HttpStatus.BAD_REQUEST, "фильм без названия");
         } else {
             film.setId(id);
             films.put(id, film);

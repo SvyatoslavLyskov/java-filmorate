@@ -13,6 +13,7 @@ public class User {
     @NotEmpty
     private String email;
     @NotBlank
+    @NotEmpty
     private String login;
     private String name;
     @PastOrPresent

@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -26,7 +27,22 @@ public class UserController {
         if (users.containsKey(user.getId())) {
             log.warn("Такой пользователь уже существует.");
             throw new ValidationException(HttpStatus.BAD_REQUEST, "Такой пользователь уже существует.");
-        } else {
+        } else if (user.getLogin() == null || user.getLogin().isBlank()) {
+            log.warn("логин не может быть пустым");
+            throw new ValidationException(HttpStatus.BAD_REQUEST, "логин не может быть пустым");
+        } else if (user.getBirthday().isAfter(LocalDate.now())) {
+            log.warn("день рождения не может быть в будущем");
+            throw new ValidationException(HttpStatus.BAD_REQUEST, "день рождения не может быть в будущем");
+        } else if (user.getEmail() == null || user.getEmail().isBlank()) {
+            log.warn("email не может быть пуст");
+            throw new ValidationException(HttpStatus.BAD_REQUEST, "email не может быть пуст");
+        }else if (!user.getEmail().contains("@")) {
+            log.warn("некорректный email");
+            throw new ValidationException(HttpStatus.BAD_REQUEST, "некорректный email");
+        }else if (user.getLogin().contains(" ")){
+            log.warn("некорректный login");
+            throw new ValidationException(HttpStatus.BAD_REQUEST, "некорректный login");
+        }else{
             user.setId(id);
             correctName(user);
             users.put(id, user);
