@@ -36,13 +36,13 @@ public class UserController {
         } else if (user.getEmail() == null || user.getEmail().isBlank()) {
             log.warn("email не может быть пуст");
             throw new ValidationException(HttpStatus.BAD_REQUEST, "email не может быть пуст");
-        }else if (!user.getEmail().contains("@")) {
+        } else if (!user.getEmail().contains("@")) {
             log.warn("некорректный email");
             throw new ValidationException(HttpStatus.BAD_REQUEST, "некорректный email");
-        }else if (user.getLogin().contains(" ")){
+        } else if (user.getLogin().contains(" ")) {
             log.warn("некорректный login");
             throw new ValidationException(HttpStatus.BAD_REQUEST, "некорректный login");
-        }else{
+        } else {
             user.setId(id);
             correctName(user);
             users.put(id, user);
