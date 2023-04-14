@@ -39,7 +39,7 @@ public class FilmController {
         } else if (!(film.getDuration() > 0)) {
             log.warn("некорректная продолжительность фильма");
             throw new ValidationException(HttpStatus.BAD_REQUEST, "некорректная продолжительность фильма");
-        } else if(film.getName() == null || film.getName().isBlank()){
+        } else if (film.getName() == null || film.getName().isBlank()){
             log.warn("фильм без названия");
             throw new ValidationException(HttpStatus.BAD_REQUEST, "фильм без названия");
         } else {
