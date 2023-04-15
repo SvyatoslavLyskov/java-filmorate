@@ -25,7 +25,7 @@ public class UserController {
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
-       if(isValid(user)){
+        if (isValid(user)) {
             user.setId(id);
             correctName(user);
             users.put(id, user);
@@ -48,7 +48,7 @@ public class UserController {
         return user;
     }
 
-    private boolean isValid(User user){
+    private boolean isValid(User user) {
         if (users.containsKey(user.getId())) {
             log.warn("Такой пользователь уже существует.");
             throw new ValidationException("Такой пользователь уже существует.");
