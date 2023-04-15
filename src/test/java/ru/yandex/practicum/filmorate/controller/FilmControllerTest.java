@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -11,10 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class FilmControllerTest {
-    FilmController controller = new FilmController();
+    private final FilmController controller = new FilmController();
 
     @Test
     public void shouldNotCreateFilmWithLongDescription() {
+
         Film film = new Film();
         film.setName("Matrix3");
         film.setDuration(115);
@@ -24,6 +26,9 @@ public class FilmControllerTest {
         film.setReleaseDate(LocalDate.of(2022, 12, 1));
         film.setId(film.getId());
         assertThrows(ValidationException.class, () -> controller.createFilm(film));
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
+                controller.createFilm(film));
+        Assertions.assertEquals("Описание не более 200 символов", exception.getMessage());
     }
 
     @Test
@@ -33,8 +38,10 @@ public class FilmControllerTest {
         film.setDuration(100);
         film.setDescription("Description");
         film.setReleaseDate(LocalDate.of(1852, 10, 15));
-
         assertThrows(ValidationException.class, () -> controller.createFilm(film));
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
+                controller.createFilm(film));
+        Assertions.assertEquals("Ошибка, дата релиза — не раньше 28 декабря 1895 года.", exception.getMessage());
     }
 
     @Test
@@ -46,6 +53,9 @@ public class FilmControllerTest {
         film.setReleaseDate(LocalDate.of(1992, 7, 30));
         film.setId(film.getId());
         assertThrows(ValidationException.class, () -> controller.createFilm(film));
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
+                controller.createFilm(film));
+        Assertions.assertEquals("некорректная продолжительность фильма", exception.getMessage());
     }
 
     @Test
@@ -55,7 +65,9 @@ public class FilmControllerTest {
         film.setDuration(100);
         film.setDescription("Description");
         film.setReleaseDate(LocalDate.of(1994, 11, 29));
-
         assertThrows(ValidationException.class, () -> controller.createFilm(film));
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
+                controller.createFilm(film));
+        Assertions.assertEquals("фильм без названия", exception.getMessage());
     }
 }

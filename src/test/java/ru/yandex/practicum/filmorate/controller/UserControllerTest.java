@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class UserControllerTest {
-    UserController controller = new UserController();
+    private final UserController controller = new UserController();
 
     @Test
     public void shouldNotCreateUserWithEmptyLogin() {
@@ -31,6 +32,9 @@ public class UserControllerTest {
         user.setEmail("mail@yandex.ru");
         user.setBirthday(LocalDate.of(1992, 11, 10));
         assertThrows(ValidationException.class, () -> controller.createUser(user));
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
+                controller.createUser(user));
+        Assertions.assertEquals("некорректный login", exception.getMessage());
     }
 
     @Test
@@ -39,8 +43,10 @@ public class UserControllerTest {
         user.setName("Павел");
         user.setLogin("Pavel");
         user.setBirthday(LocalDate.of(1975, 11, 12));
-
         assertThrows(ValidationException.class, () -> controller.createUser(user));
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
+                controller.createUser(user));
+        Assertions.assertEquals("email не может быть пуст", exception.getMessage());
     }
 
     @Test
@@ -50,8 +56,10 @@ public class UserControllerTest {
         user.setLogin("Yablonsky10");
         user.setEmail("alexmail.ru");
         user.setBirthday(LocalDate.of(1991, 5, 15));
-
         assertThrows(ValidationException.class, () -> controller.createUser(user));
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
+                controller.createUser(user));
+        Assertions.assertEquals("некорректный email", exception.getMessage());
     }
 
     @Test
@@ -61,8 +69,10 @@ public class UserControllerTest {
         user.setLogin("Bush");
         user.setEmail("");
         user.setBirthday(LocalDate.of(1990, 11, 10));
-
         assertThrows(ValidationException.class, () -> controller.createUser(user));
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
+                controller.createUser(user));
+        Assertions.assertEquals("email не может быть пуст", exception.getMessage());
     }
 
     @Test
@@ -72,7 +82,9 @@ public class UserControllerTest {
         user.setLogin("login7");
         user.setEmail("mail@yandex.ru");
         user.setBirthday(LocalDate.of(2028, 5, 16));
-
         assertThrows(ValidationException.class, () -> controller.createUser(user));
+        ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
+                controller.createUser(user));
+        Assertions.assertEquals("день рождения не может быть в будущем", exception.getMessage());
     }
 }
