@@ -27,7 +27,8 @@ public class UserService {
     public List<User> addFriend(Long firstId, Long secondId) {
         if (isExist(firstId) && isExist(secondId)) {
             if (userStorage.getUserById(firstId).getFriends().contains(secondId)) {
-                throw new InternalException("Пользователи уже в списке друзей");
+                throw new InternalException("Пользователи " + firstId + " и " +
+                        secondId + " уже в списке друзей");
             }
             userStorage.getUserById(firstId).getFriends().add(secondId);
             userStorage.getUserById(secondId).getFriends().add(firstId);
