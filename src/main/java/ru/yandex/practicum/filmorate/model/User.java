@@ -33,5 +33,4 @@ public class User {
         this.birthday = birthday;
         this.friends = new HashSet<>();
     }
-
 }
