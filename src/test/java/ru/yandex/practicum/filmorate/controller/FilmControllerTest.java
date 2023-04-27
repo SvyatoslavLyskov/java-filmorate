@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -12,18 +15,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class FilmControllerTest {
-    private final FilmController controller = new FilmController();
+    private final FilmController controller = new FilmController(new FilmService(new InMemoryFilmStorage(),
+            new InMemoryUserStorage()));
+
 
     @Test
     public void shouldNotCreateFilmWithLongDescription() {
-
-        Film film = new Film();
-        film.setName("Matrix3");
-        film.setDuration(115);
+        Film film = new Film(1, "film", "description", LocalDate.of(1992, 10, 15),
+                50, 0);
         film.setDescription("over200symbolsover200symbolsover200symbolsover200symbolsover200symbolsover200symbolsover" +
                 "over200symbolsover200symbolsover200symbolsover200symbolsover200symbolsover200symbolsover200s" +
                 "over200symbolsover200symbolsover200symbols");
-        film.setReleaseDate(LocalDate.of(2022, 12, 1));
         film.setId(film.getId());
         assertThrows(ValidationException.class, () -> controller.createFilm(film));
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
@@ -33,11 +35,8 @@ public class FilmControllerTest {
 
     @Test
     public void shouldNotCreateFilmWithBadReleaseDate() {
-        Film film = new Film();
-        film.setName("matrix2");
-        film.setDuration(100);
-        film.setDescription("Description");
-        film.setReleaseDate(LocalDate.of(1852, 10, 15));
+        Film film = new Film(1, "film", "description", LocalDate.of(1852, 10, 15),
+                50, 0);
         assertThrows(ValidationException.class, () -> controller.createFilm(film));
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
                 controller.createFilm(film));
@@ -46,11 +45,8 @@ public class FilmControllerTest {
 
     @Test
     public void shouldNotCreateFilmWithBadDuration() {
-        Film film = new Film();
-        film.setName("Matrix");
-        film.setDuration(-100L);
-        film.setDescription("Description");
-        film.setReleaseDate(LocalDate.of(1992, 7, 30));
+        Film film = new Film(1, "film", "description", LocalDate.of(1995, 10, 15),
+                -50L, 0);
         film.setId(film.getId());
         assertThrows(ValidationException.class, () -> controller.createFilm(film));
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
@@ -60,11 +56,8 @@ public class FilmControllerTest {
 
     @Test
     public void shouldNotCreateFilmWithEmptyName() {
-        Film film = new Film();
-        film.setName("");
-        film.setDuration(100);
-        film.setDescription("Description");
-        film.setReleaseDate(LocalDate.of(1994, 11, 29));
+        Film film = new Film(1, "", "description", LocalDate.of(1994, 10, 15),
+                50, 0);
         assertThrows(ValidationException.class, () -> controller.createFilm(film));
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
                 controller.createFilm(film));

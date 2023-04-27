@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -12,25 +14,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class UserControllerTest {
-    private final UserController controller = new UserController();
+    private final UserController controller = new UserController(new UserService(new InMemoryUserStorage()));
 
     @Test
     public void shouldNotCreateUserWithEmptyLogin() {
-        User user = new User();
-        user.setName("Andrei");
-        user.setLogin("");
-        user.setEmail("mail@yandex.ru");
-        user.setBirthday(LocalDate.of(1985, 6, 15));
+        User user = new User(1, "mail@yandex.ru", "", "Andrew",
+                LocalDate.of(1985, 6, 15));
         assertThrows(ValidationException.class, () -> controller.createUser(user));
     }
 
     @Test
     public void shouldNotCreateUserWithBadLogin() {
-        User user = new User();
-        user.setName("Andrew");
-        user.setLogin("Andy b");
-        user.setEmail("mail@yandex.ru");
-        user.setBirthday(LocalDate.of(1992, 11, 10));
+        User user = new User(1, "mail@yandex.ru", "Andy A", "Andrew",
+                LocalDate.of(1985, 6, 15));
         assertThrows(ValidationException.class, () -> controller.createUser(user));
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
                 controller.createUser(user));
@@ -39,10 +35,8 @@ public class UserControllerTest {
 
     @Test
     public void shouldNotCreateUserWithNullEmail() {
-        User user = new User();
-        user.setName("Павел");
-        user.setLogin("Pavel");
-        user.setBirthday(LocalDate.of(1975, 11, 12));
+        User user = new User(1, null, "best", "Andrew",
+                LocalDate.of(1985, 6, 15));
         assertThrows(ValidationException.class, () -> controller.createUser(user));
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
                 controller.createUser(user));
@@ -51,11 +45,8 @@ public class UserControllerTest {
 
     @Test
     public void shouldNotCreateUserWithBadEmail() {
-        User user = new User();
-        user.setName("Alexander");
-        user.setLogin("Yablonsky10");
-        user.setEmail("alexmail.ru");
-        user.setBirthday(LocalDate.of(1991, 5, 15));
+        User user = new User(1, "andrewmail.ru", "best", "Andrew",
+                LocalDate.of(1985, 6, 15));
         assertThrows(ValidationException.class, () -> controller.createUser(user));
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
                 controller.createUser(user));
@@ -64,11 +55,8 @@ public class UserControllerTest {
 
     @Test
     public void shouldNotCreateUserWithBlankEmail() {
-        User user = new User();
-        user.setName("George");
-        user.setLogin("Bush");
-        user.setEmail("");
-        user.setBirthday(LocalDate.of(1990, 11, 10));
+        User user = new User(1, "", "best", "Andrew",
+                LocalDate.of(1985, 6, 15));
         assertThrows(ValidationException.class, () -> controller.createUser(user));
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
                 controller.createUser(user));
@@ -77,11 +65,8 @@ public class UserControllerTest {
 
     @Test
     public void shouldNotCreateUserWithBadBirthday() {
-        User user = new User();
-        user.setName("Nataly");
-        user.setLogin("login7");
-        user.setEmail("mail@yandex.ru");
-        user.setBirthday(LocalDate.of(2028, 5, 16));
+        User user = new User(1, "mail@yandex.ru", "best", "Andrew",
+                LocalDate.of(2028, 5, 16));
         assertThrows(ValidationException.class, () -> controller.createUser(user));
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () ->
                 controller.createUser(user));
