@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,13 +41,9 @@ public class FilmDbStorage implements FilmStorage {
         this.mpaDbStorage = mpaDbStorage;
     }
 
-    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     @Override
     public Film createFilm(Film film) {
-        if (film.getName() == null || film.getName().isEmpty()) {
+        if (StringUtils.isEmpty(film.getName())) {
             throw new ValidationException("Название фильма не может быть пустым");
         }
         String sql = "INSERT INTO films (name, description, release_date, duration, mpa_id) VALUES (?, ?, ?, ?, ?)";

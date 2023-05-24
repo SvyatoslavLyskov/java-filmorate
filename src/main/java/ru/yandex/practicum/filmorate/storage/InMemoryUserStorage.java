@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -90,7 +91,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     private void correctName(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
+        if (StringUtils.isEmpty(user.getName())) {
             user.setName(user.getLogin());
         }
     }

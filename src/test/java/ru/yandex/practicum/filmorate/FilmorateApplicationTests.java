@@ -22,9 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 class FilmorateApplicationTests {
-
     private final UserDbStorage userDbStorage;
     private final FilmDbStorage filmDbStorage;
     private final FriendshipDbStorage friendshipDbStorage;

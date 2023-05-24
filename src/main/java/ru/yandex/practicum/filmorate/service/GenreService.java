@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.interfaces.GenreStorage;
 
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 
 @Slf4j
 @Service
@@ -17,7 +17,7 @@ public class GenreService {
 
     private final GenreStorage genreDbStorage;
 
-    public LinkedHashSet<Genre> getAllGenres() {
+    public HashSet<Genre> getAllGenres() {
         return genreDbStorage.getAllGenres();
     }
 

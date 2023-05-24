@@ -8,14 +8,14 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NonNull
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Film {
     long id;
     @NotBlank
@@ -27,6 +27,6 @@ public class Film {
     LocalDate releaseDate;
     @Min(1)
     long duration;
-    private LinkedHashSet<Genre> genres;
+    private Set<Genre> genres = new HashSet<>();
     private Mpa mpa;
 }

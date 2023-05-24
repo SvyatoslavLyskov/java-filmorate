@@ -10,8 +10,8 @@ import ru.yandex.practicum.filmorate.storage.interfaces.MpaStorage;
 
 import java.util.List;
 
-@Slf4j
 @Service
+@Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class MpaService {
 

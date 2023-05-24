@@ -44,13 +44,13 @@ public class UserService {
         }
     }
 
-    public List<User> getMutualFriends(User user1, User user2) {
-        if (isExist(user1.getId()) || isExist(user2.getId())) {
+    public List<User> getMutualFriends(Long userId, Long userTwoId) {
+        if (isExist(userId) || isExist(userTwoId)) {
             log.warn("Не удалось составить список общих друзей");
             throw new ObjectNotFoundException("Нет такого ID");
         }
-        Set<Long> mutual = new HashSet<>(friendshipStorage.getFriendsIdsById(user1.getId()));
-        mutual.retainAll(friendshipStorage.getFriendsIdsById(user2.getId()));
+        Set<Long> mutual = new HashSet<>(friendshipStorage.getFriendsIdsById(userId));
+        mutual.retainAll(friendshipStorage.getFriendsIdsById(userTwoId));
         List<User> friendsList = new ArrayList<>();
         for (Long friendId : mutual) {
             User friend = userStorage.getUserById(friendId);
