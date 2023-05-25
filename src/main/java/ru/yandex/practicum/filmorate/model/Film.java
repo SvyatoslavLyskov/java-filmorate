@@ -27,6 +27,6 @@ public class Film {
     LocalDate releaseDate;
     @Min(1)
     long duration;
-    private Set<Genre> genres = new HashSet<>();
-    private Mpa mpa;
+    Set<Genre> genres = new HashSet<>();
+    Mpa mpa;
 }
