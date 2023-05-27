@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.interfaces.FilmStorage;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -20,6 +21,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class InMemoryFilmStorage implements FilmStorage {
 
     private final Map<Long, Film> films = new HashMap<>();
+    FilmStorage filmStorage;
     private static long id = 1;
     private static final LocalDate EPOCH_FILMS = LocalDate.of(1895, Month.DECEMBER, 28);
 
@@ -83,5 +85,10 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
         log.info("фильм c id {} успешно получен.", id);
         return films.get(id);
+    }
+
+    @Override
+    public boolean isValid(Long id) {
+        return filmStorage.isValid(id);
     }
 }

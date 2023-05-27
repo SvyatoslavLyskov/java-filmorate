@@ -2,16 +2,15 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.interfaces.UserStorage;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -23,10 +22,7 @@ public class InMemoryUserStorage implements UserStorage {
     private static long id = 1;
     UserStorage userStorage;
 
-    public Map<Long, User> getUsers() {
-        return users;
-    }
-
+    @Override
     public User createUser(User user) {
         if (isValid(user)) {
             user.setId(id);
@@ -38,6 +34,7 @@ public class InMemoryUserStorage implements UserStorage {
         return user;
     }
 
+    @Override
     public User updateUser(User user) {
         if (users.containsKey(user.getId())) {
             correctName(user);
@@ -60,31 +57,8 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User deleteUserById(Long id) {
-        User user = users.get(id);
-        users.remove(id);
-        return user;
-    }
-
-    public User addFriend(Long userId, Long friendId) {
-        userStorage.addFriend(userId, friendId);
-        return userStorage.getUserById(userId);
-    }
-
-    public User deleteFriend(Long userId, Long friendId) {
-        userStorage.deleteFriend(userId, friendId);
-        return userStorage.getUserById(userId);
-    }
-
-    @Override
-    public List<User> getMutualFriends(Long userId, Long friendId) {
-        List<User> mutualFriends = new ArrayList<>();
-        for (Long id : getUserById(userId).getFriends()) {
-            if (getUserById(friendId).getFriends().contains(id)) {
-                mutualFriends.add(getUserById(id));
-            }
-        }
-        return mutualFriends;
+    public boolean isExist(long id) {
+        return userStorage.isExist(id);
     }
 
     private boolean isValid(User user) {
@@ -111,8 +85,13 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
+    @Override
+    public Collection<User> getUsers() {
+        return userStorage.getUsers();
+    }
+
     private void correctName(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
+        if (StringUtils.isEmpty(user.getName())) {
             user.setName(user.getLogin());
         }
     }
